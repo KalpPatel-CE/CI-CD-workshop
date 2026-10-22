@@ -3,15 +3,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CI/CD Workshop</title>
+  <title>CI/CD Workshop 🚀</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-    h1 { color: #232f3e; }
-    p { color: #555; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Floating bubbles background */
+    .bubbles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: rise linear infinite;
+    }
+
+    .bubble:nth-child(1)  { width: 60px;  height: 60px;  left: 10%; background: #ff6ec7; animation-duration: 8s;  animation-delay: 0s; }
+    .bubble:nth-child(2)  { width: 40px;  height: 40px;  left: 25%; background: #00d2ff; animation-duration: 10s; animation-delay: 2s; }
+    .bubble:nth-child(3)  { width: 80px;  height: 80px;  left: 40%; background: #a18cd1; animation-duration: 7s;  animation-delay: 1s; }
+    .bubble:nth-child(4)  { width: 50px;  height: 50px;  left: 60%; background: #fbc2eb; animation-duration: 9s;  animation-delay: 3s; }
+    .bubble:nth-child(5)  { width: 70px;  height: 70px;  left: 75%; background: #43e97b; animation-duration: 11s; animation-delay: 0.5s; }
+    .bubble:nth-child(6)  { width: 35px;  height: 35px;  left: 88%; background: #f9ca24; animation-duration: 6s;  animation-delay: 4s; }
+
+    @keyframes rise {
+      0%   { transform: translateY(0) scale(1); opacity: 0.15; }
+      100% { transform: translateY(-110vh) scale(1.3); opacity: 0; }
+    }
+
+    /* Main content */
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .badge {
+      background: linear-gradient(90deg, #f9ca24, #f0932b);
+      color: #1a1a2e;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 18px;
+      border-radius: 50px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(249,202,36,0.4);
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(90deg, #ff6ec7, #a18cd1, #00d2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #aaa;
+      text-align: center;
+      max-width: 500px;
+      margin-bottom: 50px;
+      line-height: 1.7;
+    }
+
+    /* Cards */
+    .cards {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px 24px;
+      width: 200px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .card .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: 0.8rem; color: #aaa; }
+
+    .card:nth-child(1) { border-top: 3px solid #ff6ec7; }
+    .card:nth-child(2) { border-top: 3px solid #00d2ff; }
+    .card:nth-child(3) { border-top: 3px solid #43e97b; }
+    .card:nth-child(4) { border-top: 3px solid #f9ca24; }
+
+    /* Pipeline animation */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 16px 30px;
+      margin-bottom: 50px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .step:nth-child(1) .dot { background: #ff6ec7; animation-delay: 0s; }
+    .step:nth-child(3) .dot { background: #f9ca24; animation-delay: 0.3s; }
+    .step:nth-child(5) .dot { background: #00d2ff; animation-delay: 0.6s; }
+    .step:nth-child(7) .dot { background: #43e97b; animation-delay: 0.9s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.6; }
+    }
+
+    .arrow { color: #555; font-size: 1rem; }
+
+    /* CTA Button */
+    .btn {
+      background: linear-gradient(90deg, #ff6ec7, #a18cd1, #00d2ff);
+      background-size: 200%;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 40px;
+      border-radius: 50px;
+      cursor: pointer;
+      animation: gradientShift 3s ease infinite;
+      box-shadow: 0 8px 30px rgba(161,140,209,0.4);
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:hover { transform: scale(1.05); }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0%; }
+      50%  { background-position: 100%; }
+      100% { background-position: 0%; }
+    }
+
+    footer {
+      margin-top: 60px;
+      color: #555;
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to CI/CD Workshop</h1>
-  <p>This is a simple HTML page for the CI/CD workshop.</p>
+
+  <div class="bubbles">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <div class="container">
+
+    <div class="badge">🎓 Workshop 2025</div>
+
+    <h1>CI/CD Pipeline<br>Made Fun 🚀</h1>
+
+    <p class="subtitle">
+      Learn how to build, test, and deploy applications automatically with modern DevOps practices.
+    </p>
+
+    <!-- Pipeline Steps -->
+    <div class="pipeline">
+      <div class="step"><div class="dot"></div> Code</div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="dot"></div> Build</div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="dot"></div> Test</div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="dot"></div> Deploy 🎉</div>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Fast Builds</h3>
+        <p>Automate every build in seconds</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧪</div>
+        <h3>Auto Testing</h3>
+        <p>Catch bugs before they ship</p>
+      </div>
+      <div class="card">
+        <div class="icon">🚢</div>
+        <h3>Easy Deploy</h3>
+        <p>Push to prod with confidence</p>
+      </div>
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Secure</h3>
+        <p>Security checks at every step</p>
+      </div>
+    </div>
+
+    <a class="btn" href="#">Get Started →</a>
+
+    <footer>Built with ❤️ for CI/CD Workshop</footer>
+
+  </div>
+
 </body>
 </html>
